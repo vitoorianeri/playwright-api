@@ -11,10 +11,8 @@ test('search for image', async ({ page }) => {
     return route.fulfill({
       status: 400,
       contentType: 'text/plain',
-        });
-      
+    });
   })
-
   await google.navegatTo();
   await google.clickSearchBar();
   await page.waitForTimeout(2000);
@@ -36,8 +34,7 @@ test('replace image', async ({ page }) => {
       status: 200,
       contentType: 'image/jpg',
       body: imageBuffer,
-        });
-      
+    });
   })
 
   await google.navegatTo();
