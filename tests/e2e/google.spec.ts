@@ -5,21 +5,14 @@ import fs from 'fs';
 test('search for image', async ({ page }) => {
   const google = new Google(page);
 
-  await page.route('**/*', (route, request) => {
-
-    if (route.request().resourceType() === 'image') {
-      const url = route.request().url();
-
-      if (request.url().includes('images?')) {
-        console.log(url);
-        return route.fulfill({
-          status: 400,
-          contentType: 'text/plain',
+  await page.route(/https:\/\/encrypted-tbn0\.gstatic\.com\/images\?q=tbn:ANd9Gc.*/, (route, request) => {
+    const url = route.request().url();
+    console.log('Interceptado:', url);
+    return route.fulfill({
+      status: 400,
+      contentType: 'text/plain',
         });
-      }
-    }
-
-    route.continue();
+      
   })
 
   await google.navegatTo();
@@ -36,22 +29,15 @@ test('replace image', async ({ page }) => {
 
   const imageBuffer = fs.readFileSync('C:/Users/vickv/OneDrive/Imagens/20230709_111722.jpg');
 
-  await page.route('**/*', (route, request) => {
-
-    if (route.request().resourceType() === 'image') {
-      const url = route.request().url();
-
-      if (request.url().includes('images?')) {
-        console.log(url);
-        return route.fulfill({
-          status: 200,
-          contentType: 'image/jpg',
-          body: imageBuffer,
+  await page.route(/https:\/\/encrypted-tbn0\.gstatic\.com\/images\?q=tbn:ANd9Gc.*/, (route, request) => {
+    const url = route.request().url();
+    console.log('Interceptado:', url);
+    return route.fulfill({
+      status: 200,
+      contentType: 'image/jpg',
+      body: imageBuffer,
         });
-      }
-    }
-
-    route.continue();
+      
   })
 
   await google.navegatTo();
